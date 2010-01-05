@@ -2,13 +2,17 @@
 
 
 require 'lib/sandbox/sandbox'
+require 'net/http'
+
+result = Net::HTTP.get(URI.parse("http://ggtest.bashquest.com/index.rb"))
 
 Thread.start do
   sandbox = Sandbox.new
   sandbox.taint
+
   $SAFE = 4
   begin
-    sandbox.instance_eval("say(nil); say(\"hi\n\")")
+    sandbox.instance_eval(result)
   rescue
     sandbox.say($!.to_s)
   end
