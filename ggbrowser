@@ -30,6 +30,14 @@ window.signal_connect('destroy') do
   Gtk.main_quit
 end
 
-window.show
+entry = Gtk::Entry.new
+entry.set_size_request 130, 25 # width, height
+entry.text = "http://ggtest.bashquest.com/index.rb"
+
+layout = Gtk::Layout.new
+layout.put entry, 10, 10 # child_widget, x, y
+
+window.add layout
+window.show_all
 
 Gtk.main
