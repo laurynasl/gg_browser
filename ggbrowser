@@ -25,13 +25,15 @@ require 'gtk2'
 
 window = Gtk::Window.new
 window.title = "GG_Browser"
+window.default_width = 800
+window.default_height = 600
 
 window.signal_connect('destroy') do
   Gtk.main_quit
 end
 
 entry = Gtk::Entry.new
-entry.set_size_request 130, 25 # width, height
+entry.set_size_request 700, 25 # width, height
 entry.text = "http://ggtest.bashquest.com/index.rb"
 
 layout = Gtk::Layout.new
