@@ -1,0 +1,15 @@
+#!/usr/bin/env ruby
+
+
+require 'lib/sandbox/sandbox'
+
+Thread.start do
+  sandbox = Sandbox.new
+  sandbox.taint
+  $SAFE = 4
+  begin
+    sandbox.instance_eval("say(nil); say(\"hi\n\")")
+  rescue
+    sandbox.say($!.to_s)
+  end
+end
