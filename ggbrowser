@@ -4,6 +4,7 @@
 require 'lib/sandbox/sandbox'
 require 'net/http'
 
+
 result = Net::HTTP.get(URI.parse("http://ggtest.bashquest.com/index.rb"))
 
 Thread.start do
@@ -17,3 +18,18 @@ Thread.start do
     sandbox.say($!.to_s)
   end
 end
+
+# create a window
+
+require 'gtk2'
+
+window = Gtk::Window.new
+window.title = "GG_Browser"
+
+window.signal_connect('destroy') do
+  Gtk.main_quit
+end
+
+window.show
+
+Gtk.main
