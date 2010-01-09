@@ -5,17 +5,23 @@ require 'lib/sandbox/sandbox'
 require 'net/http'
 
 
-result = Net::HTTP.get(URI.parse("http://ggtest.bashquest.com/index.rb"))
+def run_url(url)
+  result = Net::HTTP.get(URI.parse(url))
 
-Thread.start do
-  sandbox = Sandbox.new
-  sandbox.taint
+  Thread.start do
+    sandbox = Sandbox.new
+    sandbox.taint
 
-  $SAFE = 4
-  begin
-    sandbox.instance_eval(result)
-  rescue
-    sandbox.say($!.to_s)
+    $SAFE = 4
+    begin
+      sandbox.instance_eval(result, url)
+    rescue
+      sandbox.say($!.to_s)
+    ensure
+      if $!
+        sandbox.say $!.message + "\n"
+      end
+    end
   end
 end
 
@@ -35,6 +41,9 @@ end
 entry = Gtk::Entry.new
 entry.set_size_request 700, 25 # width, height
 entry.text = "http://ggtest.bashquest.com/index.rb"
+entry.signal_connect('activate') do |obj|
+  run_url(obj.text)
+end
 
 layout = Gtk::Layout.new
 layout.put entry, 10, 10 # child_widget, x, y
