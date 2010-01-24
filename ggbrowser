@@ -27,28 +27,36 @@ end
 
 # create a window
 
-require 'gtk2'
+def start_gtk
+  require 'gtk2'
 
-window = Gtk::Window.new
-window.title = "GG_Browser"
-window.default_width = 800
-window.default_height = 600
+  window = Gtk::Window.new
+  window.title = "GG_Browser"
+  window.default_width = 800
+  window.default_height = 600
 
-window.signal_connect('destroy') do
-  Gtk.main_quit
+  window.signal_connect('destroy') do
+    Gtk.main_quit
+  end
+
+  entry = Gtk::Entry.new
+  entry.set_size_request 700, 25 # width, height
+  entry.text = "http://ggtest.bashquest.com/index.rb"
+  entry.signal_connect('activate') do |obj|
+    run_url(obj.text)
+  end
+
+  layout = Gtk::Layout.new
+  layout.put entry, 10, 10 # child_widget, x, y
+
+  window.add layout
+  window.show_all
+
+  Gtk.main
 end
 
-entry = Gtk::Entry.new
-entry.set_size_request 700, 25 # width, height
-entry.text = "http://ggtest.bashquest.com/index.rb"
-entry.signal_connect('activate') do |obj|
-  run_url(obj.text)
+if $*.length > 0
+  run_url $*.first
+else
+  start_gtk
 end
-
-layout = Gtk::Layout.new
-layout.put entry, 10, 10 # child_widget, x, y
-
-window.add layout
-window.show_all
-
-Gtk.main
